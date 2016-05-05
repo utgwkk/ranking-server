@@ -14,4 +14,12 @@ app.use(_.get('/', function *() {
     this.body = "<h1>It works!</h1>";
 }));
 
+app.use(_.get('/:name', function *(name) {
+    this.headers['Content-Type'] = 'text/plain';
+    const result = {
+        name
+    };
+    this.body = JSON.stringify(result);
+}));
+
 app.listen(3000);
