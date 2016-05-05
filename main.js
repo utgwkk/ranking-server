@@ -11,7 +11,7 @@ var app = koa();
 app.use(function *(next) {
     const start = new Date;
     yield next;
-    console.log('%s %s %s', this.method, this.url, this.status);
+    console.log('%s %s %s in %sms', this.method, this.url, this.status, new Date - start);
 });
 
 app.use(_.get('/', function *() {
