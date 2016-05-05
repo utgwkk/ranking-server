@@ -172,6 +172,7 @@ app.use(_.post('/register/:name', function *(name) {
             ok: false,
             error: e
         };
+        this.status = 400;
     }
     this.body = JSON.stringify(result);
 }));
