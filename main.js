@@ -2,6 +2,7 @@
 
 const koa = require('koa');
 const _ = require('koa-route');
+const config = require('./config');
 var app = koa();
 
 app.use(function *(next) {
