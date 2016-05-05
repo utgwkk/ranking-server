@@ -2,6 +2,7 @@
 
 const koa = require('koa');
 const _ = require('koa-route');
+const sqlite3 = require('sqlite3');
 const config = require('./config');
 var app = koa();
 
