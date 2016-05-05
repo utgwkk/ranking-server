@@ -90,6 +90,7 @@ app.use(_.get('/:name', function *(name) {
     if (validToken != '' && token == validToken) {
         let ranking = [];
         result = {
+            ok: true,
             name,
             ranking: yield rankingQuery(name),
         };
@@ -101,6 +102,7 @@ app.use(_.get('/:name', function *(name) {
             errorMessage = 'Invalid token';
         }
         result = {
+            ok: false,
             error: errorMessage
         };
         this.status = 400;
@@ -120,6 +122,7 @@ app.use(_.post('/:name', function *(name) {
         if (validToken != '' && token == validToken && point && playerName) {
             yield submitScore(name, playerName, point);
             result = {
+                ok: true,
                 player_name: playerName,
                 game_name: name,
                 point
@@ -135,6 +138,7 @@ app.use(_.post('/:name', function *(name) {
                 errorMessage = 'The required parameter is missing.';
             }
             result = {
+                ok: false,
                 error: errorMessage
             };
             this.status = 400;
@@ -165,6 +169,7 @@ app.use(_.post('/register/:name', function *(name) {
         }
     } catch (e) {
         result = {
+            ok: false,
             error: e
         }
     }
