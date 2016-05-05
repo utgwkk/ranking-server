@@ -18,5 +18,9 @@
   "bugs": {
     "url": "https://github.com/utgw/ranking-server/issues"
   },
-  "homepage": "https://github.com/utgw/ranking-server#readme"
+  "homepage": "https://github.com/utgw/ranking-server#readme",
+  "dependencies": {
+    "koa": "^1.2.0",
+    "koa-route": "^2.4.2"
+  }
 }
