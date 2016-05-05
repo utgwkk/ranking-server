@@ -4,6 +4,7 @@ const koa = require('koa');
 const _ = require('koa-route');
 const sqlite3 = require('sqlite3');
 const config = require('./config');
+const sha256 = require('crypto').createHash('sha256');
 var app = koa();
 
 app.use(function *(next) {
@@ -40,6 +41,35 @@ function *tokenQuery (name) {
     });
 }
 
+function *validateGameName (name) {
+    return new Promise(function (resolve, reject) {
+        if (!name.match(/^[a-zA-Z0-9_]{2,63}$/))
+            reject('Invalid name');
+        const db = new sqlite3.Database(config.database_path);
+        db.serialize(function () {
+            db.get('SELECT * FROM games WHERE name = $name', {$name: name}, function (err, row) {
+                db.close();
+                if (row) {
+                    reject('The name ' + name + " has already registered");
+                } else {
+                    resolve();
+                }
+            });
+        });
+    });
+}
+
+function *registerGame (name, token) {
+    return new Promise(function (resolve, reject) {
+        const db = new sqlite3.Database(config.database_path);
+        db.serialize(function () {
+            db.run('INSERT INTO games VALUES(?,?)', [name, token]);
+        });
+        db.close();
+        resolve();
+    });
+}
+
 app.use(_.get('/:name', function *(name) {
     const token = this.request.query.token || '';
     const validToken = yield tokenQuery(name);
@@ -64,6 +94,27 @@ app.use(_.get('/:name', function *(name) {
         this.status = 400;
     }
     this.body = result;
+}));
+
+app.use(_.post('/register/:name', function *(name) {
+    this.headers['Content-Type'] = 'text/plain';
+    let result;
+    try {
+        yield validateGameName(name);
+        sha256.update(Math.random() * 1000000007 + name);
+        const token = sha256.digest('hex');
+        yield registerGame(name, token);
+        result = {
+            ok: true,
+            name,
+            token
+        }
+    } catch (e) {
+        result = {
+            error: e
+        }
+    }
+    this.body = JSON.stringify(result);
 }));
 
 app.listen(3000);
