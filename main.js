@@ -28,7 +28,7 @@ function *rankingQuery (name) {
     });
 }
 
-function tokenQuery (name) {
+function *tokenQuery (name) {
     return new Promise(function (resolve, reject) {
         const db = new sqlite3.Database(config.database_path);
         db.serialize(function () {
