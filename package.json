@@ -1,0 +1,22 @@
+{
+  "name": "ranking-server",
+  "version": "1.0.0",
+  "description": "Ranking server with Node.js",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/utgw/ranking-server.git"
+  },
+  "keywords": [
+    "ranking"
+  ],
+  "author": "utgwkk",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/utgw/ranking-server/issues"
+  },
+  "homepage": "https://github.com/utgw/ranking-server#readme"
+}
