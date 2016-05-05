@@ -5,6 +5,7 @@ const _ = require('koa-route');
 const sqlite3 = require('sqlite3');
 const config = require('./config');
 const sha256 = require('crypto').createHash('sha256');
+const parse = require('co-body');
 var app = koa();
 
 app.use(function *(next) {
@@ -70,6 +71,17 @@ function *registerGame (name, token) {
     });
 }
 
+function *submitScore (gameName, playerName, point) {
+    return new Promise(function (resolve, reject) {
+        const db = new sqlite3.Database(config.database_path);
+        db.serialize(function () {
+            db.run('INSERT INTO scores VALUES(?,?,?)', [point, gameName, playerName]);
+        });
+        db.close();
+        resolve();
+    });
+}
+
 app.use(_.get('/:name', function *(name) {
     const token = this.request.query.token || '';
     const validToken = yield tokenQuery(name);
@@ -94,6 +106,48 @@ app.use(_.get('/:name', function *(name) {
         this.status = 400;
     }
     this.body = result;
+}));
+
+app.use(_.post('/:name', function *(name) {
+    const data = yield parse(this);
+    const token = data.token;
+    const validToken = yield tokenQuery(name);
+    this.headers['Content-Type'] = 'text/plain';
+    let result;
+    const playerName = data.player_name;
+    const point = data.point && Number(data.point);
+    try {
+        if (validToken != '' && token == validToken && point && playerName) {
+            yield submitScore(name, playerName, point);
+            result = {
+                player_name: playerName,
+                game_name: name,
+                point
+            };
+            this.status = 201;
+        } else {
+            let errorMessage;
+            if (validToken == '') {
+                errorMessage = 'The game ' + name + ' is not registered.';
+            } else if (token != validToken) {
+                errorMessage = 'Invalid token';
+            } else {
+                errorMessage = 'The required parameter is missing.';
+            }
+            result = {
+                error: errorMessage
+            };
+            this.status = 400;
+        }
+    } catch (e) {
+        result = {
+            ok: false,
+            error: e
+        }
+        this.status = 400;
+    } finally {
+        this.body = JSON.stringify(result);
+    }
 }));
 
 app.use(_.post('/register/:name', function *(name) {
