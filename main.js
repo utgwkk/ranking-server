@@ -147,7 +147,7 @@ app.use(_.post('/:name', function *(name) {
         result = {
             ok: false,
             error: e
-        }
+        };
         this.status = 400;
     } finally {
         this.body = JSON.stringify(result);
@@ -166,12 +166,12 @@ app.use(_.post('/register/:name', function *(name) {
             ok: true,
             name,
             token
-        }
+        };
     } catch (e) {
         result = {
             ok: false,
             error: e
-        }
+        };
     }
     this.body = JSON.stringify(result);
 }));
