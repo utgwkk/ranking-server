@@ -1,12 +1,11 @@
 'use strict';
 
-const koa = require('koa');
 const _ = require('koa-route');
 const sqlite3 = require('sqlite3');
 const config = require('./config');
 const sha256 = require('crypto').createHash('sha256');
 const parse = require('co-body');
-var app = koa();
+const app = module.exports = require('koa')();
 
 app.use(function *(next) {
     const start = new Date;
