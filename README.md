@@ -49,7 +49,7 @@ GET / を除く全ての API において、処理が成功した場合は `ok` 
 #### example result
 
 ```js
-// POST /hoge
+// POST /register/hoge
 
 {"ok":true,"name":"hoge","token":"hogefugapiooooooo0123456789"}
 ```
