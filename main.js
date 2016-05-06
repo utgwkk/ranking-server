@@ -167,12 +167,12 @@ app.use(_.post('/:name', function *(name) {
 }));
 
 app.use(_.delete('/:name', function *(name) {
-    const data = yield parse(this);
-    const token = data.token;
-    const validToken = yield tokenQuery(name);
-    this.headers['Content-Type'] = 'text/plain';
     let result;
     try {
+        const data = yield parse(this);
+        const token = data.token;
+        const validToken = yield tokenQuery(name);
+        this.headers['Content-Type'] = 'text/plain';
         if (validToken != '' && token == validToken) {
             yield deleteGame(name);
             result = {
