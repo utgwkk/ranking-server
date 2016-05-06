@@ -7,11 +7,13 @@ const sha256 = require('crypto').createHash('sha256');
 const parse = require('co-body');
 const app = module.exports = require('koa')();
 
-app.use(function *(next) {
-    const start = new Date;
-    yield next;
-    console.log('%s %s %s in %sms', this.method, this.url, this.status, new Date - start);
-});
+if (process.env.NODE_ENV != 'test') {
+    app.use(function *(next) {
+        const start = new Date;
+        yield next;
+        console.log('%s %s %s in %sms', this.method, this.url, this.status, new Date - start);
+    });
+}
 
 app.use(_.get('/', function *() {
     this.body = "<h1>It works!</h1>";
@@ -224,4 +226,5 @@ app.use(_.post('/register/:name', function *(name) {
     this.body = JSON.stringify(result);
 }));
 
-app.listen(3000);
+if (!module.parent)
+    app.listen(3000);
