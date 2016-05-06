@@ -71,6 +71,18 @@ function *registerGame (name, token) {
     });
 }
 
+function *deleteGame (name) {
+    return new Promise(function (resolve, reject) {
+        const db = new sqlite3.Database(config.database_path);
+        db.serialize(function () {
+            db.run('DELETE FROM games WHERE name = ?', name);
+            db.run('DELETE FROM scores WHERE game_name = ?', name);
+        });
+        db.close();
+        resolve();
+    });
+}
+
 function *submitScore (gameName, playerName, point) {
     return new Promise(function (resolve, reject) {
         const db = new sqlite3.Database(config.database_path);
@@ -136,6 +148,42 @@ app.use(_.post('/:name', function *(name) {
                 errorMessage = 'Invalid token';
             } else {
                 errorMessage = 'The required parameter is missing.';
+            }
+            result = {
+                ok: false,
+                error: errorMessage
+            };
+            this.status = 400;
+        }
+    } catch (e) {
+        result = {
+            ok: false,
+            error: e
+        };
+        this.status = 400;
+    } finally {
+        this.body = JSON.stringify(result);
+    }
+}));
+
+app.use(_.delete('/:name', function *(name) {
+    const data = yield parse(this);
+    const token = data.token;
+    const validToken = yield tokenQuery(name);
+    this.headers['Content-Type'] = 'text/plain';
+    let result;
+    try {
+        if (validToken != '' && token == validToken) {
+            yield deleteGame(name);
+            result = {
+                ok: true
+            };
+        } else {
+            let errorMessage;
+            if (validToken == '') {
+                errorMessage = 'The game ' + name + ' is not registered.';
+            } else if (token != validToken) {
+                errorMessage = 'Invalid token';
             }
             result = {
                 ok: false,
