@@ -216,6 +216,7 @@ app.use(_.post('/register/:name', function *(name) {
             name,
             token
         };
+        this.status = 201;
     } catch (e) {
         result = {
             ok: false,
