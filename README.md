@@ -1,6 +1,8 @@
 # ranking-server
 ランキング記録サーバー
 
+[![Build Status](https://travis-ci.org/utgw/ranking-server.svg?branch=master)](https://travis-ci.org/utgw/ranking-server)
+
 ## Usage
 
 ```sh
