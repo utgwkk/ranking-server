@@ -20,7 +20,7 @@ describe('ranking server', function () {
         describe('POST /', function () {
             it('should be 404', function (done) {
                 request
-                .get('/')
+                .post('/')
                 .expect(404, done);
             });
         });
