@@ -69,6 +69,7 @@ GET / を除く全ての API において、処理が成功した場合は `ok` 
 
 ```js
 // POST /hoge?token=fuga&point=101&player_name=utgwkk
+// curl http://localhost:3000/hoge -d token=fuga -d player_name=utgwkk -d point=101
 
 {"ok":true,"player_name":"utgwkk","game_name":"hoge","point":101}
 ```
