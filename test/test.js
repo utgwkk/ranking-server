@@ -17,6 +17,14 @@ describe('ranking server', function () {
             });
         });
 
+        describe('POST /', function () {
+            it('should be 404', function (done) {
+                request
+                .get('/')
+                .expect(404, done);
+            });
+        });
+
         describe('GET /hoge', function () {
             it('should be 400', function (done) {
                 request
