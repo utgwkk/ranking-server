@@ -73,3 +73,21 @@ GET / を除く全ての API において、処理が成功した場合は `ok` 
 
 {"ok":true,"player_name":"utgwkk","game_name":"hoge","point":101}
 ```
+
+### DELETE /:game_name
+`game_name` という名前で登録されたゲームに関するデータを全て消去します。
+
+#### parameters
+
+|name |required|description|
+|:----|-------:|:----------|
+|token|       o|ゲームのスコア登録やデータ参照に必要なトークンです。|
+
+#### example result
+
+```js
+// DELETE /hoge?token=fuga
+// curl -X DELETE http://localhost:3000/hoge -d token=fuga
+
+{"ok":true}
+```
