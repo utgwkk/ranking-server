@@ -5,14 +5,11 @@ const sqlite3 = require('sqlite3');
 const config = require('./config');
 const sha256 = require('crypto').createHash('sha256');
 const parse = require('co-body');
-const app = module.exports = require('koa')();
+var app = module.exports = require('koa')();
+app.proxy = true;
 
 if (process.env.NODE_ENV != 'test') {
-    app.use(function *(next) {
-        const start = new Date;
-        yield next;
-        console.log('%s %s %s in %sms', this.method, this.url, this.status, new Date - start);
-    });
+    app.use(require('koa-accesslog')());
 }
 
 app.use(_.get('/', function *() {
